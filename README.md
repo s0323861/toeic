@@ -54,7 +54,7 @@ MIT License
 
 ## 👨‍💻 Author
 
-Akira Mukai
+向井聡（Akira Mukai）
 
 - Blog: https://s0323861.github.io/
 - GitHub: https://github.com/s0323861
