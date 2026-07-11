@@ -4,8 +4,8 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-TOEIC Listening & Reading 公開テストの日程を
-簡単に Google カレンダーへ追加できる Web アプリです。
+TOEIC Listening & Reading / Speaking & Writing / Bridge の
+公開テスト日程を Google カレンダーへ簡単に追加できる Web アプリです。
 
 受験予定の回を選択するだけで、Google カレンダーに登録可能な  
 ICS ファイルを自動生成します。
