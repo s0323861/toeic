@@ -2,13 +2,17 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>TOEIC受験日程メーカー</title>
+    <title>TOEIC受験日程メーカー - あなたのTOEIC試験日程を簡単に作成</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
+
+<?php
+$schedules = require 'schedule_data.php';
+?>
 
 <body class="bg-light">
 
@@ -38,42 +42,26 @@
 
             <div class="card-body">
 
-                <div class="form-check mb-2">
-                    <input class="form-check-input exam-type"
-                        type="checkbox"
-                        id="type-lr"
-                        data-target="lr-area"
-                        checked>
-
-                    <label class="form-check-label" for="type-lr">
-                        <i class="fa-solid fa-headphones text-primary"></i>
-                        TOEIC Listening & Reading
-                    </label>
-                </div>
+                <?php foreach ($schedules as $type => $group): ?>
 
                 <div class="form-check mb-2">
+
                     <input class="form-check-input exam-type"
                         type="checkbox"
-                        id="type-sw"
-                        data-target="sw-area">
+                        id="type-<?= $type ?>"
+                        data-target="<?= $type ?>-area"
+                        <?= $type === 'lr' ? 'checked' : '' ?>>
 
-                    <label class="form-check-label" for="type-sw">
-                        <i class="fa-solid fa-microphone text-success"></i>
-                        TOEIC Speaking & Writing
+                    <label class="form-check-label">
+                        <i class="fa-solid fa-<?= $group['icon'] ?>
+                        text-<?= $group['color'] ?>"></i>
+
+                        <?= $group['label'] ?>
                     </label>
+
                 </div>
 
-                <div class="form-check">
-                    <input class="form-check-input exam-type"
-                        type="checkbox"
-                        id="type-bridge"
-                        data-target="bridge-area">
-
-                    <label class="form-check-label" for="type-bridge">
-                        <i class="fa-solid fa-bridge text-warning"></i>
-                        TOEIC Bridge
-                    </label>
-                </div>
+                <?php endforeach; ?>
 
             </div>
         </div>
@@ -149,103 +137,54 @@
 
             <div class="card-body">
 
-                <div id="lr-area">
+                <?php foreach ($schedules as $type => $group): ?>
 
-                    <h5 class="mt-3 mb-3">
-                        <i class="fa-solid fa-headphones text-primary"></i>
-                        TOEIC Listening & Reading
-                    </h5>
-
-                    <?php
-                    $lr_tests = [
-                        "lr_20260712" => "2026年7月12日(日)",
-                        "lr_20260823" => "2026年8月23日(日)",
-                        "lr_20260905" => "2026年9月5日(土)",
-                        "lr_20260927" => "2026年9月27日(日)",
-                        "lr_20261025" => "2026年10月25日(日)",
-                        "lr_20261115" => "2026年11月15日(日)",
-                        "lr_20261206" => "2026年12月6日(日)",
-                        "lr_20261219" => "2026年12月19日(土)"
-                    ];
-
-                    foreach ($lr_tests as $key => $value) {
-                        echo "
-                        <div class='form-check mb-2'>
-                            <input class='form-check-input'
-                                type='checkbox'
-                                name='tests[]'
-                                value='{$key}'>
-                            <label class='form-check-label'>
-                                {$value} TOEIC L&R
-                            </label>
-                        </div>";
-                    }
-                    ?>
-                </div>
-
-                <div id="sw-area" style="display:none;">
+                <div id="<?= $type ?>-area"
+                    <?= $type !== 'lr' ? 'style="display:none;"' : '' ?>>
 
                     <h5 class="mt-4 mb-3">
-                        <i class="fa-solid fa-microphone text-success"></i>
-                        TOEIC Speaking & Writing
+                        <i class="fa-solid fa-<?= $group['icon'] ?>
+                        text-<?= $group['color'] ?>"></i>
+                        <?= $group['label'] ?>
                     </h5>
 
-                    <?php
-                    $sw_tests = [
-                        "sw_20260809" => "2026年8月9日(日)",
-                        "sw_20260913" => "2026年9月13日(日)",
-                        "sw_20261018" => "2026年10月18日(日)",
-                        "sw_20261129" => "2026年11月29日(日)",
-                        "sw_20261220" => "2026年12月20日(日)",
-                        "sw_20270131" => "2027年1月31日(日)",
-                        "sw_20270228" => "2027年2月28日(日)",
-                        "sw_20270328" => "2027年3月28日(日)"
-                    ];
+                    <?php foreach ($group['events'] as $key => $event): ?>
 
-                    foreach ($sw_tests as $key => $value) {
-                        echo "
-                        <div class='form-check mb-2'>
-                            <input class='form-check-input'
-                                type='checkbox'
-                                name='tests[]'
-                                value='{$key}'>
-                            <label class='form-check-label'>
-                                {$value} TOEIC S&W
+                        <?php
+                        $date = DateTime::createFromFormat(
+                            'Ymd',
+                            $event['exam'][0]
+                        );
+
+                        $week = ['日','月','火','水','木','金','土'];
+
+                        $display =
+                            $date->format('Y年n月j日')
+                            . '('
+                            . $week[$date->format('w')]
+                            . ')';
+                        ?>
+
+                        <div class="form-check mb-2">
+                            <input class="form-check-input"
+                                type="checkbox"
+                                name="tests[]"
+                                value="<?= $key ?>">
+
+                            <label class="form-check-label">
+                                <?= $display ?>
+
+                                <?php if ($group['suffix']): ?>
+                                    <?= $group['suffix'] ?>
+                                <?php endif; ?>
                             </label>
-                        </div>";
-                    }
-                    ?>
+                        </div>
+
+                    <?php endforeach; ?>
+
                 </div>
 
-                <div id="bridge-area" style="display:none;">
-
-                    <h5 class="mt-4 mb-3">
-                        <i class="fa-solid fa-bridge text-warning"></i>
-                        TOEIC Bridge
-                    </h5>
-
-                    <?php
-                    $bridge_tests = [
-                        "bridge_106" => "第106回 TOEIC Bridge",
-                        "bridge_107" => "第107回 TOEIC Bridge",
-                        "bridge_108" => "第108回 TOEIC Bridge",
-                        "bridge_109" => "第109回 TOEIC Bridge"
-                    ];
-
-                    foreach ($bridge_tests as $key => $value) {
-                        echo "
-                        <div class='form-check mb-2'>
-                            <input class='form-check-input'
-                                type='checkbox'
-                                name='tests[]'
-                                value='{$key}'>
-                            <label class='form-check-label'>
-                                {$value}
-                            </label>
-                        </div>";
-                    }
-                    ?>
-                </div>
+                <?php endforeach; ?>
 
             </div>
         </div>
@@ -266,6 +205,21 @@
     </form>
 
 </div>
+
+<footer class="bg-dark text-light py-4 mt-5">
+    <div class="container text-center">
+        <p class="mb-1">TOEIC受験日程メーカー</p>
+        <small>
+            Developed By <a href="https://tsukuba42195.sakura.ne.jp/" class="text-light">Akira Mukai</a> | <a href="https://github.com/s0323861/toeic" class="text-light">GitHub</a>
+        </small>
+        <p>
+            <a href="https://github.com/s0323861/toeic"
+               class="btn btn-outline-light mt-3">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+        </p>
+    </div>
+</footer>
 
 <script>
 document.querySelectorAll('.exam-type').forEach(function(checkbox){
