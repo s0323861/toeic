@@ -133,6 +133,17 @@ https://github.com/s0323861
 
 ---
 
+## ❤️ Support
+
+If this project helped you, consider supporting its development.
+
+☕ Buy me a coffee:
+https://ko-fi.com/akiramukai
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F3RMTFK)
+
+---
+
 ## ⚠ Disclaimer
 
 This project is not affiliated with or endorsed by ETS or IIBC.
